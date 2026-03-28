@@ -1,7 +1,22 @@
+import { Route, Routes } from "react-router-dom"
+import LoginPage from "./pages/Login/LoginPage"
+import RegisterPage from "./pages/Register/RegisterPage"
+import HomePage from "./pages/Home/HomePage"
+import Layout from "./Layout"
+import UserProfilePage from "./pages/UserProfile/UserProfilePage"
+
 function App() {
   return (
-    <h1 className="text-blue-500 text-2xl font-medium">Hello</h1>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<HomePage />} />
+
+      </Route>
+      <Route path="/profile/:username" element={<UserProfilePage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+    </Routes>
   )
 }
 
-export default App
+export default App;
