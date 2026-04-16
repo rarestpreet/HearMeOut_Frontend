@@ -4,11 +4,12 @@ import apiCall from "../services/apiCall"
 
 function UserContextProvider({ children }) {
     const [userProfile, setUserProfile] = useState({
-        userId: "",
+        userId: 0,
         username: "",
-        isAccountActive: false
+        accountVerified: false,
+        role: "",
     })
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const contextValue = {
         loading, setLoading,
@@ -17,7 +18,7 @@ function UserContextProvider({ children }) {
 
     useEffect(() => {
         const fetchUserDetails = async () => {
-            await apiCall.getUserDetails(setLoading, setUserProfile)
+            const response = await apiCall.getUserDetails(setLoading, setUserProfile)
         }
 
         fetchUserDetails()

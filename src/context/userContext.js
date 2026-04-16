@@ -5,7 +5,8 @@ export const userContext = createContext({
     userProfile: {
         userId: "",
         username: "",
-        isAccountVerified: false
+        accountVerified: false,
+        role: ""
     },
     setUserProfile: () => { },
     loading: false,
