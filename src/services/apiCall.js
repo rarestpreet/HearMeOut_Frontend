@@ -154,11 +154,14 @@ const getQuestionDetails = async (postId, setLoading) => {
     }
 }
 
-const postAnswer = async (postId, setLoading) => {
+const postAnswer = async (postId, body, setLoading) => {
     setLoading(true)
 
     try {
-        const response = await api.post(`/post/${postId}/answer`)
+        const response = await api.post(
+            `/post/${postId}/answer`,
+            { body }
+        )
 
         return response?.data ? response.data : ""
     } catch (ex) {
@@ -226,6 +229,37 @@ const postQuestion = async (questionDetails, setLoading) => {
     }
 }
 
+const postComment = async (commentDetails, setLoading) => {
+    setLoading(true)
+
+    try {
+        const response = await api.post(
+            "/comment",
+            commentDetails
+        )
+
+        return response?.data ? response.data : ""
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data?.message || ex.message || "Network error")
+
+        return ex
+    } finally {
+        setLoading(false)
+    }
+}
+
+const checkHealthPing = async () => {
+    return await api.get("/health")
+}
+
+const checkHealthSendCookie = async () => {
+    return await api.post("/health/cors")
+}
+
+const checkHealthCors = async () => {
+    return await api.get("/health/cors")
+}
+
 const apiCall = {
     getFeed,
     loginUser,
@@ -240,7 +274,11 @@ const apiCall = {
     postAnswer,
     getAllTags,
     createNewTag,
-    postQuestion
+    postQuestion,
+    postComment,
+    checkHealthPing,
+    checkHealthSendCookie,
+    checkHealthCors
 }
 
 export default apiCall
