@@ -1,6 +1,14 @@
+const errorHandler = (message) => {
+    console.error("[Error]: ", message)
+}
+
+const infoHandler = (message) => {
+    console.error("[Info]: ", message)
+}
+
 const logging = {
-    errorHandler: (message) => console.error(message),
-    infoHandler: (message) => console.info(message)
+    errorHandler,
+    infoHandler
 }
 
 export default logging

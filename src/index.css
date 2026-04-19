@@ -1,24 +1,70 @@
 @import 'tailwindcss';
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+
+.body {
+  max-height: screen;
+  overflow-y: hidden;
+}
 
 @theme {
-  --font-inter: 'Inter', sans-serif;
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-300: #93c5fd;
-  --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6; /* Tech Blue */
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-800: #1e40af;
-  --color-brand-900: #1e3a8a;
-  --color-brand-950: #172554;
+  --font-sans: 'Inter', sans-serif;
+
+  /* ── Green Primary Palette (from stitch design_plan) ── */
+  --color-brand-50: #f0fdf4;
+  --color-brand-100: #dcfce7;
+  --color-brand-200: #bbf7d0;
+  --color-brand-300: #86efac;
+  --color-brand-400: #4ade80;
+  --color-brand-500: #22c55e;
+  --color-brand-600: #16a34a;
+  --color-brand-700: #15803d;
+  --color-brand-800: #166534;
+
+  /* ── Semantic ── */
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-400: #f87171;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-warning-500: #f59e0b;
+  --color-info-500: #3b82f6;
+  --color-info-100: #dbeafe;
+  --color-info-600: #2563eb;
+  --color-info-700: #1d4ed8;
+
+  /* ── Material-style Semantic Surface / Role Tokens ── */
+  --color-surface: #ffffff;
+  --color-surface-container-lowest: #f8fafc;
+  --color-surface-container-low: #f1f5f9;
+  --color-surface-container: #e2e8f0;
+  --color-surface-container-high: #cbd5e1;
+  --color-surface-container-highest: #94a3b8;
+  --color-surface-variant: #e8f5e9;
+  --color-inverse-surface: #1e293b;
+  --color-inverse-on-surface: #f8fafc;
+
+  --color-primary: #16a34a;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #dcfce7;
+  --color-on-primary-container: #14532d;
+
+  --color-secondary: #166534;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #bbf7d0;
+  --color-on-secondary-container: #052e16;
+
+  --color-on-surface: #0f172a;
+  --color-on-surface-variant: #475569;
+  --color-on-background: #0f172a;
+
+  --color-outline-variant: #cbd5e1;
+  --color-error: #ef4444;
 }
 
 @layer base {
   body {
-    @apply font-inter text-slate-800 bg-slate-50 antialiased;
+    @apply font-sans text-gray-800 bg-gray-50 antialiased;
   }
 
   button {
@@ -27,19 +73,137 @@
 }
 
 @layer utilities {
-  .glass-panel {
-    @apply bg-white border border-slate-200 shadow-sm hover:shadow-lg hover:border-brand-300 transition-all duration-300 rounded-xl;
-  }
-  
+
+  /* ── Buttons ── */
   .btn-primary {
-    @apply flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-medium rounded-xl shadow-md hover:shadow-brand-500/30 transition-all active:scale-[0.98] cursor-pointer select-none;
-  }
-  
-  .btn-secondary {
-    @apply flex items-center justify-center gap-2 px-6 py-2.5 bg-white hover:bg-slate-50 text-slate-700 font-medium rounded-xl border border-slate-200 shadow-sm hover:shadow transition-all active:scale-[0.98] cursor-pointer select-none;
+    @apply flex items-center justify-center gap-2 px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm rounded-xl shadow-sm hover:shadow-md transition-all active:scale-[0.97] cursor-pointer select-none;
   }
 
-  .text-gradient {
-    @apply bg-gradient-to-r from-brand-600 to-indigo-500 bg-clip-text text-transparent;
+  .btn-secondary {
+    @apply flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-black font-semibold text-sm border border-gray-200 rounded-xl shadow-sm transition-all active:scale-[0.97] cursor-pointer select-none;
+  }
+
+  .btn-ghost {
+    @apply flex items-center justify-center gap-2 px-5 py-2.5 bg-transparent hover:bg-gray-100 text-gray-600 hover:text-black font-semibold text-sm rounded-xl transition-all active:scale-[0.97] cursor-pointer select-none;
+  }
+
+  .btn-danger {
+    @apply flex items-center justify-center gap-2 px-5 py-2.5 bg-danger-500 hover:bg-danger-600 text-white font-semibold text-sm rounded-xl shadow-sm hover:shadow-md transition-all active:scale-[0.97] cursor-pointer select-none;
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-brand-300 transition-all duration-200;
+  }
+
+  .card-accent {
+    @apply bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-brand-300 transition-all duration-200 hover:border-l-4 hover:border-l-brand-500;
+  }
+
+  .card-elevated {
+    @apply bg-white rounded-2xl shadow-lg;
+  }
+
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl;
+  }
+
+  /* ── Inputs ── */
+  .input-field {
+    @apply w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-400 transition;
+  }
+
+  .input-error {
+    @apply bg-danger-50 border-danger-400 focus:ring-danger-400;
+  }
+
+  /* ── Tags / Pills ── */
+  .tag-pill {
+    @apply bg-white border border-gray-200 text-gray-600 text-xs font-bold rounded-md px-2.5 py-1 hover:border-brand-300 hover:text-brand-700 hover:bg-brand-50 transition-all cursor-pointer;
+  }
+
+  .tag-pill-selected {
+    @apply bg-brand-500 text-white border-brand-500 text-xs font-bold rounded-md px-2.5 py-1;
+  }
+
+  .tag-pill-display {
+    @apply bg-black text-white text-xs font-bold rounded-md px-2.5 py-1 uppercase tracking-wider shadow-sm;
+  }
+
+  /* ── Badges ── */
+  .badge-open {
+    @apply text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider bg-brand-100 text-brand-700 border border-brand-200;
+  }
+
+  .badge-answered {
+    @apply text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider bg-info-100 text-info-700 border border-blue-200;
+  }
+
+  .badge-closed {
+    @apply text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider bg-gray-100 text-gray-500 border border-gray-200;
+  }
+
+  .badge-admin {
+    @apply text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider bg-black text-white;
+  }
+}
+
+/* ── Keyframes ── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+
+  50% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* ── Custom Non-Tailwind Utilities ── */
+@layer utilities {
+
+  /* Hero gradient banner */
+  .hero-gradient {
+    background: linear-gradient(135deg, theme(--color-primary) 0%, #22c55e 50%, #4ade80 100%);
+  }
+
+  /* Pulse glow animation for status indicators */
+  .pulse-glow {
+    animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Monospace code style */
+  .mono-code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  }
+
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #3f3f3f;
+    border-radius: 9999px;
   }
 }

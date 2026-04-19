@@ -16,57 +16,81 @@ function LoginPage() {
         setLoading(true)
         e.preventDefault()
         setErrors({})
-        const response = await apiCall.loginUser({
+        await apiCall.loginUser({
             email: email,
             password: password
         }, setLoading, navigate, setUserProfile)
-
-        // handle errorMessage in input field
     }
 
     return (
-        <div className="min-h-screen bg-linear-to-bl from-green-500 via-green-400 to-green-700 flex justify-center items-center p-4">
-            <div className="w-full max-w-md bg-white/20 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden border border-white/50">
+        <div className="min-h-screen flex">
+            {/* Left panel — green branding */}
+            <div className="hidden lg:flex lg:w-1/2 bg-brand-500 flex-col justify-center items-center p-12 relative overflow-hidden">
+                {/* Decorative circles */}
+                <div className="absolute top-20 -left-20 w-64 h-64 bg-brand-400/30 rounded-full blur-3xl" />
+                <div className="absolute bottom-20 -right-20 w-80 h-80 bg-brand-600/30 rounded-full blur-3xl" />
 
-                <div className="flex items-center justify-center bg-green-500 border-b-2 p-5">
-                    <BrandContainer />
+                <div className="relative z-10 text-center">
+                    <h1 className="text-5xl font-extrabold text-white mb-4 leading-tight">
+                        Ask. Answer.<br />Grow.
+                    </h1>
+                    <p className="text-white/80 text-lg max-w-sm leading-relaxed">
+                        Join a community of developers and curious minds.
+                        Share knowledge, solve problems, and level up together.
+                    </p>
                 </div>
+            </div>
 
-                {/* Form */}
-                <div className="px-8 py-2 flex flex-col gap-5">
-                    <h2 className="text-2xl font-bold text-center text-gray-900">Welcome Back</h2>
-                    <form onSubmit={handleLogin} className="flex flex-col gap-5">
-                        <AuthInput
-                            label="Email Address"
-                            type="email"
-                            placeholder="you@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            error={errors.email}
-                        />
-                        <AuthInput
-                            label="Password"
-                            type="password"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            error={errors.password}
-                        />
+            {/* Right panel — form */}
+            <div className="flex-1 flex items-center justify-center p-6 bg-gray-50">
+                <div className="w-full max-w-md">
+                    {/* Mobile brand header */}
+                    <div className="flex justify-center mb-8 lg:hidden">
+                        <BrandContainer />
+                    </div>
 
-                        <button
-                            type="submit"
-                            className="mt-3 w-full bg-black text-white font-bold text-lg py-3 rounded-xl hover:bg-gray-800 transition-colors shadow-md"
-                            disabled={loading}
-                        >
-                            {loading ? "Loading" : "Sign In"}
-                        </button>
-                    </form>
+                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                        <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">
+                            Welcome Back
+                        </h2>
+                        <p className="text-sm text-gray-500 text-center mb-6">
+                            Sign in to continue to HearMeOut
+                        </p>
 
-                    <div className="text-center text-sm font-medium text-gray-600">
-                        Don't have an account?{" "}
-                        <Link to="/register" className="text-green-600 hover:text-green-700 text-lg hover:underline font-bold">
-                            Create one
-                        </Link>
+                        <form onSubmit={handleLogin} className="flex flex-col gap-5">
+                            <AuthInput
+                                label="Email Address"
+                                type="email"
+                                placeholder="you@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                error={errors.email}
+                            />
+                            <AuthInput
+                                label="Password"
+                                type="password"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                error={errors.password}
+                            />
+
+                            <button
+                                type="submit"
+                                className="mt-3 w-full bg-black text-white font-bold text-lg py-3 rounded-xl
+                                    hover:bg-gray-800 transition-colors shadow-md active:scale-[0.98] cursor-pointer"
+                                disabled={loading}
+                            >
+                                {loading ? "Signing in..." : "Sign In"}
+                            </button>
+                        </form>
+
+                        <div className="text-center text-sm font-medium text-gray-600 mt-6">
+                            Don't have an account?{" "}
+                            <Link to="/register" className="text-brand-600 hover:text-brand-700 hover:underline font-bold">
+                                Create one
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

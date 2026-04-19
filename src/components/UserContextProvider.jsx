@@ -18,7 +18,7 @@ function UserContextProvider({ children }) {
 
     useEffect(() => {
         const fetchUserDetails = async () => {
-            const response = await apiCall.getUserDetails(setLoading, setUserProfile)
+            await apiCall.getUserDetails(setLoading, setUserProfile)
         }
 
         fetchUserDetails()

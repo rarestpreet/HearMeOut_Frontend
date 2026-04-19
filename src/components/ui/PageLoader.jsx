@@ -1,14 +1,19 @@
-import React from 'react';
-
-export default function PageLoader({ text = "Loading incredible things..." }) {
+/**
+ * PageLoader — full-screen loader with a thin animated green top bar.
+ * Props: text (optional message)
+ */
+function PageLoader({ text = "Loading..." }) {
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-[50vh] py-16 gap-10">
-      <div className="relative flex items-center justify-center">
-        <div className="absolute w-20 h-20 border-4 border-brand-200 rounded-full animate-pulse"></div>
-        <div className="absolute w-20 h-20 border-4 border-transparent border-t-brand-600 rounded-full animate-spin"></div>
-        <div className="w-4 h-4 bg-brand-500 rounded-full animate-bounce"></div>
+    <div className="flex flex-col items-center justify-center py-20 gap-6">
+      {/* Top progress bar */}
+      <div className="w-48 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-full bg-brand-500 rounded-full animate-pulse"
+          style={{ width: "60%", animationDuration: "1.2s" }}
+        />
       </div>
-      <p className="text-brand-700 font-medium animate-pulse tracking-wide text-sm uppercase">{text}</p>
+      <p className="text-sm font-medium text-gray-500">{text}</p>
     </div>
-  );
+  )
 }
+
+export default PageLoader

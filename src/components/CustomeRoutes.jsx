@@ -1,26 +1,12 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom"
+import { Navigate, Outlet } from "react-router-dom"
 import { useUserContext } from "../context/userContext"
-import PageLoader from "./ui/PageLoader"
-import PageNavBar from "./ui/PageNavBar"
 
-export const AdminOnly = () => {
-    const { userProfile, loading } = useUserContext()
-    const location = useLocation()
+export function AdminOnly() {
+    const { userProfile } = useUserContext()
 
-    if (loading) {
-        return <PageLoader text="Verifying permissions..." />
+    if (userProfile?.role === "ADMIN") {
+        return <Outlet />
     }
 
-    if (userProfile?.role !== "ADMIN") {
-        return <Navigate to="/" replace />
-    }
-
-    const title = location.pathname.includes('/health') ? "System Health" : "Admin Dashboard"
-
-    return (
-        <div className="min-h-screen bg-slate-50 font-sans">
-            <PageNavBar title={title} />
-            <Outlet />
-        </div>
-    )
+    return <Navigate to="/" replace />
 }
