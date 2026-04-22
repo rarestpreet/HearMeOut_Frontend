@@ -1,15 +1,33 @@
-import { FaTrash } from "react-icons/fa"
+import { FaEllipsisV } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
 
 /**
  * CommentItem — single comment row.
  * Props:
- *   - comment: { commentId, body, authorId, postId, updatedAt, isEditable }
+ *   - comment: {
+ *  commentId,
+ *  body,
+ *  authorUsername,
+ *  navgationPostId,
+ *  updatedAt,
+ *  operable
+ *  }
  *   - onDelete: (commentId) => void
  */
 function CommentItem({ comment, onDelete }) {
+    const navigate = useNavigate()
+
     return (
-        <div className="flex items-start gap-3 py-2 group">
-            <p className="text-sm text-gray-700 border-l-2 border-gray-200 pl-3 flex-1 leading-relaxed">
+        <div className="px-2 rounded-xl flex items-center gap-2 py-2 group hover:bg-surface-container-lowest">
+            <div
+                className="w-6 h-6 bg-black text-white font-medium text-xs rounded-full
+                            flex justify-center items-center cursor-pointer shadow select-none
+                            hover:ring-2 hover:ring-brand-300 transition-all"
+                onClick={() => navigate(`/profile/${comment.authorUsername}`)}
+            >
+                {comment.authorUsername[0].toUpperCase()}
+            </div>
+            <p className="text-sm text-gray-700 border-l-2 border-gray-200 pl-2 flex-1 leading-relaxed">
                 {comment.body}
             </p>
 
@@ -17,17 +35,15 @@ function CommentItem({ comment, onDelete }) {
                 <span className="text-xs text-gray-400 font-medium">
                     {comment.updatedAt}
                 </span>
-
-                {comment.isEditable && onDelete && (
-                    <button
-                        type="button"
-                        onClick={() => onDelete(comment.commentId)}
-                        className="text-gray-300 hover:text-danger-500 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
-                        aria-label="Delete comment"
-                    >
-                        <FaTrash className="text-xs" />
-                    </button>
-                )}
+                <button
+                    type="button"
+                    onClick={() => console.log(comment)}
+                    className={`text-gray-500 ${comment.operable ? "hover:text-black" : ""} transition-colors group-hover:opacity-100 cursor-pointer`}
+                    aria-label="Delete comment"
+                    disabled={!comment.operable}
+                >
+                    <FaEllipsisV className="text-xs" />
+                </button>
             </div>
         </div>
     )

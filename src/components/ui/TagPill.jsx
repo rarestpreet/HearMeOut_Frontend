@@ -3,7 +3,11 @@ import { FaTag, FaCheckCircle } from "react-icons/fa"
 /**
  * TagPill — tag chip in one of three visual variants.
  * Props:
- *   - tag: { tagId, name, description }
+ *   - tag: {
+   tagId,
+   name,
+   description
+   }
  *   - variant: "default" | "selected" | "display"
  *   - onToggle: optional click handler
  *   - showTooltip: whether to show description on hover

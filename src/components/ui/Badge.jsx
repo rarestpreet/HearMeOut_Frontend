@@ -1,6 +1,7 @@
 /**
  * Badge — status indicator.
- * Props: status ("OPEN" | "ANSWERED" | "CLOSED" | "ADMIN"), children (optional override text)
+ * Props: status ("OPEN" | "ANSWERED" | "CLOSED" | "UNANSWERED" | "UNREVIEWED" | "ACCEPTED"),
+ * children (optional override text)
  */
 function Badge({ status, children }) {
     const statusLower = (status || "").toLowerCase()
