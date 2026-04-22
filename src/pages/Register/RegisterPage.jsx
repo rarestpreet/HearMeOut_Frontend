@@ -28,14 +28,15 @@ function RegisterPage() {
 
     const handleRegister = async (e) => {
         e.preventDefault()
+
         const errs = validate()
         if (Object.keys(errs).length > 0) {
             setErrors(errs)
             return
         }
         setErrors({})
-        setLoading(true)
-        await apiCall.registerUser({
+
+        const response = await apiCall.registerUser({
             username,
             email,
             password

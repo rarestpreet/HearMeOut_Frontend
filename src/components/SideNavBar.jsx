@@ -1,25 +1,35 @@
-import { useLocation, useNavigate, Link, Links } from "react-router-dom"
+import { useLocation, useNavigate, Link } from "react-router-dom"
 import { useUserContext } from "../context/userContext"
-import { FaUser, FaShieldAlt, FaHeartbeat, FaHistory, FaChartBar, FaSignOutAlt, FaArrowRight } from "react-icons/fa"
+import { FaUser, FaShieldAlt, FaHeartbeat, FaHistory, FaChartBar, FaSignOutAlt, FaArrowRight, FaUserEdit, FaCheckCircle, FaKey } from "react-icons/fa"
 import apiCall from "../services/apiCall"
 
 function SideNavBar() {
     const location = useLocation()
     const navigate = useNavigate()
-    const { userProfile, setUserProfile, setLoading } = useUserContext()
+    const { loading, userProfile, setUserProfile, setLoading } = useUserContext()
 
-    const isAdmin = userProfile?.role === "ADMIN"
+    const isAdmin = userProfile?.roles?.includes("ADMIN") || false
+    const isOperable = userProfile?.username && location.pathname.includes(userProfile?.username)
 
     // ── Navigation items (role-based) ──
-    const navItems = isAdmin
-        ? [
-            { path: `/profile/${userProfile?.username}`, label: "Profile", icon: FaUser },
-            { path: "/tag", label: "Admin Dashboard", icon: FaShieldAlt },
-            { path: "/health", label: "Health Check", icon: FaHeartbeat },
-        ]
-        : [
-            { path: `/profile/${userProfile?.username}`, label: "My Profile", icon: FaUser },
-        ]
+    let navItems = [
+        { path: `/profile/${userProfile?.username}`, label: "My Profile", icon: FaUser },
+    ]
+
+    // Admins always see these
+    if (isAdmin) {
+        navItems.push({ path: "/tag", label: "Admin Dashboard", icon: FaShieldAlt })
+        navItems.push({ path: "/health", label: "Health Check", icon: FaHeartbeat })
+    }
+
+    // Operable links (Profile tools) - only shown when on own profile page
+    if (!isAdmin && isOperable) {
+        navItems.push({ path: "#", label: "Edit Profile", icon: FaUserEdit })
+        if (!userProfile?.accountVerified) {
+            navItems.push({ path: "#", label: "Verify Email", icon: FaCheckCircle })
+        }
+        navItems.push({ path: "#", label: "Reset Password", icon: FaKey })
+    }
 
     // ── Bottom utility links (only for admin) ──
     const bottomItems = [
@@ -78,11 +88,15 @@ function SideNavBar() {
                             <Link
                                 key={item.label}
                                 to={item.path}
+                                replace
                                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 active:scale-[0.97]
                                 ${location.pathname === item.path
                                         ? "bg-primary-container text-on-primary-container font-semibold shadow-sm"
                                         : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low"
-                                    }`}
+                                    }
+                                    ${item.label !== "My Profile" ? "cursor-not-allowed" : ""}
+                                `}
+
                             >
                                 <Icon className="text-base" />
                                 {item.label}
@@ -109,6 +123,7 @@ function SideNavBar() {
                     </p>
                     {bottomItems.map((item) => {
                         const Icon = item.icon
+
                         return (
                             <Link
                                 key={item.label}

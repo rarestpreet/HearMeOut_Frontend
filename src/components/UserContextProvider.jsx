@@ -7,7 +7,7 @@ function UserContextProvider({ children }) {
         userId: 0,
         username: "",
         accountVerified: false,
-        role: "",
+        roles: [],
     })
     const [loading, setLoading] = useState(true)
 

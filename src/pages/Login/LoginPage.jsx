@@ -13,10 +13,10 @@ function LoginPage() {
     const { loading, setLoading, setUserProfile } = useUserContext()
 
     const handleLogin = async (e) => {
-        setLoading(true)
         e.preventDefault()
+
         setErrors({})
-        await apiCall.loginUser({
+        const response = await apiCall.loginUser({
             email: email,
             password: password
         }, setLoading, navigate, setUserProfile)

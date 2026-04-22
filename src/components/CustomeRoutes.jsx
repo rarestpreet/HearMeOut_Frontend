@@ -4,7 +4,7 @@ import { useUserContext } from "../context/userContext"
 export function AdminOnly() {
     const { userProfile } = useUserContext()
 
-    if (userProfile?.role === "ADMIN") {
+    if (userProfile.roles.includes("ADMIN")) {
         return <Outlet />
     }
 

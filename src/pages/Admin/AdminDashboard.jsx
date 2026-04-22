@@ -18,8 +18,7 @@ export default function AdminDashboard() {
 
     const fetchTags = async () => {
         setTagsLoading(true)
-        const data = await apiCall.getAllTags(setLoading)
-        setTags(Array.isArray(data) ? data : [])
+        const data = await apiCall.getAllTags(setLoading, setTags)
         setTagsLoading(false)
     }
 
@@ -125,7 +124,13 @@ export default function AdminDashboard() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-transparent">
-                                        {tags.map((tag) => (
+                                        {(tags || [])?.length == 0 ? (
+                                            <tr>
+                                                <td colSpan={3} className="px-8 py-12 text-center text-sm text-on-surface-variant">
+                                                    No tags created yet.
+                                                </td>
+                                            </tr>
+                                        ) : (tags || []).map((tag) => (
                                             <tr key={tag.tagId} className="hover:bg-surface-container-low transition-colors group">
                                                 <td className="px-8 py-6 font-mono text-xs opacity-40">{tag.tagId}</td>
                                                 <td className="px-8 py-6">
@@ -138,19 +143,12 @@ export default function AdminDashboard() {
                                                 </td>
                                             </tr>
                                         ))}
-                                        {tags.length === 0 && (
-                                            <tr>
-                                                <td colSpan={3} className="px-8 py-12 text-center text-sm text-on-surface-variant">
-                                                    No tags created yet.
-                                                </td>
-                                            </tr>
-                                        )}
                                     </tbody>
                                 </table>
                             </div>
                             <div className="bg-surface-container-high/30 px-8 py-4 flex justify-between items-center">
                                 <p className="text-xs text-on-surface-variant">
-                                    Showing <span className="font-bold text-on-surface">{tags.length}</span> tag{tags.length !== 1 ? "s" : ""}
+                                    Showing <span className="font-bold text-on-surface">{(tags || [])?.length ? (tags || [])?.length : 0}</span> tag{(tags || [])?.length ? (tags || [])?.length !== 1 : 0 ? "s" : ""}
                                 </p>
                             </div>
                         </>

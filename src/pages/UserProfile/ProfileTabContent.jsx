@@ -2,14 +2,33 @@ import { useNavigate } from "react-router-dom"
 import { FaQuestionCircle, FaCommentDots, FaEdit, FaClock, FaChevronRight, FaThumbsUp, FaQuoteLeft } from "react-icons/fa"
 import TabLoader from "../../components/ui/TabLoader"
 import EmptyState from "../../components/ui/EmptyState"
+import Badge from "../../components/ui/Badge"
 
 /**
  * ProfileTabContent — renders the appropriate content for the active profile tab.
  * Props:
  *   - activeTab: "questions" | "answers" | "comments"
- *   - questions: UserQuestionResponseDTO[]
- *   - answers: UserAnswerResponseDTO[]
- *   - comments: UserCommentResponseDTO[]
+ *   - questions: UserQuestionResponseDTO[{
+            navigationPostId: 0,
+            title: "",
+            score: 0,
+            updatedAt: "",
+            postStatus: ""
+        }]
+ *   - answers: UserAnswerResponseDTO[{
+            body: "",
+            postStatus: "",
+            score: 0,
+            updatedAt: "",
+            navigationPostId: 0,
+            parentPostTitle: "",
+        }]
+ *   - comments: UserCommentResponseDTO[{
+            body: "",
+            navigationPostId: "",
+            postContent: "",
+            updatedAt: ""
+        }]
  *   - loading: boolean
  */
 function ProfileTabContent({ activeTab, questions, answers, comments, loading }) {
@@ -29,14 +48,14 @@ function ProfileTabContent({ activeTab, questions, answers, comments, loading })
 
         return (
             <div className="flex flex-col gap-4">
-                {questions.map((q) => (
+                {questions.map((q, i) => (
                     <div
-                        key={q.postId}
+                        key={q.i}
                         className="flex flex-col md:flex-row gap-5 items-start bg-surface-container-lowest
-                                   border border-outline-variant/20 rounded-2xl p-6
+                                   border border-outline-variant/20 rounded-2xl p-3
                                    hover:border-primary/40 hover:shadow-md
                                    transition-all duration-200 cursor-pointer group"
-                        onClick={() => navigate(`/question/${q.postId}`)}
+                        onClick={() => navigate(`/question/${q.navigationPostId}`)}
                     >
                         {/* Vote / Status badges */}
                         <div className="flex md:flex-col gap-2 min-w-[72px]">
@@ -44,27 +63,18 @@ function ProfileTabContent({ activeTab, questions, answers, comments, loading })
                                 <div className="text-lg font-black leading-none">{q.score ?? 0}</div>
                                 <div className="text-[9px] uppercase font-bold tracking-tighter mt-0.5">Votes</div>
                             </div>
-                            <div className="bg-primary text-on-primary px-3 py-2 rounded-xl text-center flex-1 md:flex-none">
-                                <div className="text-lg font-black leading-none">{q.status?.charAt(0) ?? "?"}</div>
-                                <div className="text-[9px] uppercase font-bold tracking-tighter mt-0.5">Status</div>
-                            </div>
                         </div>
 
                         {/* Content */}
                         <div className="flex-1 min-w-0">
-                            <h2 className="text-xl font-bold tracking-tight text-on-surface mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                            <h2 className="text-xl font-bold tracking-tight text-on-surface group-hover:text-primary transition-colors line-clamp-2">
                                 {q.title}
                             </h2>
-                            <div className="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
-                                <FaClock className="text-xs" />
-                                Asked {q.createdAt}
-                            </div>
+                            <span className="text-gray-500 text-xs">
+                                Asked: <span className="text-gray-700 font-semibold">{q.updatedAt}</span>
+                            </span>
                         </div>
-
-                        {/* Arrow */}
-                        <div className="self-center text-on-surface-variant group-hover:text-primary transition-colors">
-                            <FaChevronRight />
-                        </div>
+                        <Badge status={q.postStatus} />
                     </div>
                 ))}
             </div>
@@ -84,26 +94,27 @@ function ProfileTabContent({ activeTab, questions, answers, comments, loading })
         }
         return (
             <div className="flex flex-col gap-4">
-                {answers.map(a => (
+                {answers.map((a, i) => (
                     <div
-                        key={a.postId}
+                        key={a.i}
                         className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-6
-                                   hover:border-primary/40 hover:shadow-md transition-all duration-200"
-                        onClick={() => navigate(`/question/${a.parentPostId}`)}
+                                   hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer"
+                        onClick={() => navigate(`/question/${a.navigationPostId}`)}
                     >
                         {/* Header */}
-                        <div className="flex items-start gap-3 mb-3">
-                            <FaCommentDots className="text-primary mt-0.5" />
-                            <div className="text-sm font-semibold text-on-surface-variant">
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex gap-3 text-sm font-semibold text-on-surface-variant">
+                                <FaCommentDots className="text-primary mt-0.5" />
                                 Answered on: <span className="text-on-surface font-bold">{a.parentPostTitle}</span>
                             </div>
+                            <Badge status={a.postStatus} />
                         </div>
 
                         {/* Body */}
                         <p className="text-on-surface text-sm line-clamp-2 pl-7 mb-3">{a.body}</p>
 
                         {/* Footer */}
-                        <div className="flex items-center gap-3 pl-7 text-xs text-on-surface-variant font-medium">
+                        <div className="flex items-center justify-between gap-3 pl-7 text-xs text-on-surface-variant font-medium">
                             <span className="flex items-center gap-1 text-primary bg-primary-container px-2.5 py-1 rounded-full font-bold">
                                 <FaThumbsUp className="text-[10px]" />
                                 {a.score ?? 0} score
@@ -132,12 +143,12 @@ function ProfileTabContent({ activeTab, questions, answers, comments, loading })
         }
         return (
             <div className="flex flex-col gap-4">
-                {comments.map(c => (
+                {comments.map((c, i) => (
                     <div
-                        key={c.commentId}
+                        key={c.i}
                         className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-6
-                                   hover:border-primary/40 hover:shadow-md transition-all duration-200"
-                        onClick={() => navigate(`/question/${c.postId}`)}
+                                   hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer"
+                        onClick={() => navigate(`/question/${c.navigationPostId}`)}
                     >
                         {/* Header */}
                         <div className="flex items-center gap-2 mb-3">

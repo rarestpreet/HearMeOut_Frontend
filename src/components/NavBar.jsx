@@ -19,8 +19,6 @@ function NavBar() {
         location.pathname === "/health" ||
         location.pathname === "/tag"
 
-    const isHomePage = location.pathname === "/"
-
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropDownRef.current &&
@@ -43,16 +41,7 @@ function NavBar() {
 
     return (
         <div className="sticky top-0 z-50 flex justify-between items-center px-6 py-3 bg-white border-b border-gray-100 shadow-sm">
-            {isHomePage ?
-                <BrandContainer /> :
-                <button
-                    onClick={() => navigate(-1)}
-                    className="flex items-center gap-2 bg-surface-container-lowest backdrop-blur-md border border-white/20 text-black px-3 py-2 rounded-xl font-bold shadow-sm select-none
-                    hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer
-                    ">
-                    <FaArrowLeft /> Back
-                </button>
-            }
+            <BrandContainer />
 
             {userProfile?.username ? (
                 <div className="relative" ref={dropDownRef}>
@@ -90,7 +79,7 @@ function NavBar() {
                             </div>
 
                             {/* Admin Dashboard (admin only) */}
-                            {userProfile.role === "ADMIN" && (
+                            {userProfile.roles.includes("ADMIN") && (
                                 <div
                                     className="flex items-center gap-2 cursor-pointer py-2 px-3 text-sm font-medium text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
                                     onClick={() => {
@@ -104,7 +93,7 @@ function NavBar() {
                             )}
 
                             {/* Health Check (admin only) */}
-                            {userProfile.role === "ADMIN" && (
+                            {userProfile.roles.includes("ADMIN") && (
                                 <div
                                     className="flex items-center gap-2 cursor-pointer py-2 px-3 text-sm font-medium text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
                                     onClick={() => {
