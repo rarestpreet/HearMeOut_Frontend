@@ -9,7 +9,8 @@ import AnswerCard from "../../components/ui/AnswerCard"
  *   - onDeleteComment: (commentId) => void
  *   - isLoggedIn: boolean
  */
-function AnswersList({ answers = [], onVote, onAddComment, onDeleteComment, isLoggedIn }) {
+function AnswersList({ answers = [], onVote, onAddComment, onDeleteComment, onToggleStatus, isLoggedIn, commentLoader, operable, canToggle }) {
+
     return (
         <div>
             <h2 className="text-xl font-bold text-gray-900 mb-4">
@@ -24,7 +25,11 @@ function AnswersList({ answers = [], onVote, onAddComment, onDeleteComment, isLo
                         onVote={(voteType) => onVote?.(answer.postId, voteType)}
                         onAddComment={(body) => onAddComment?.(answer.postId, body)}
                         onDeleteComment={onDeleteComment}
+                        onToggleStatus={() => onToggleStatus?.(answer.postId)}
                         isLoggedIn={isLoggedIn}
+                        commentLoader={commentLoader}
+                        operable={operable}
+                        canToggle={canToggle}
                     />
                 ))}
             </div>

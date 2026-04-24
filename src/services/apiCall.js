@@ -207,8 +207,8 @@ const postAnswer = async (postId, body, setLoading) => {
 }
 
 // ── Comments ──────────────────────────────────────────────────
-const postComment = async (commentDetails, setLoading) => {
-    setLoading(true)
+const postComment = async (commentDetails, setCommentLoader) => {
+    setCommentLoader(true)
 
     try {
         const response = await api.post(
@@ -222,12 +222,12 @@ const postComment = async (commentDetails, setLoading) => {
 
         return ex?.response.data
     } finally {
-        setLoading(false)
+        setCommentLoader(false)
     }
 }
 
-const deleteComment = async (commentId, setLoading) => {
-    setLoading(true)
+const deleteComment = async (commentId, setCommentLoader) => {
+    setCommentLoader(true)
 
     try {
         const response = await api.delete(`/comment/${commentId}`)
@@ -238,7 +238,7 @@ const deleteComment = async (commentId, setLoading) => {
 
         return ex?.response.data
     } finally {
-        setLoading(false)
+        setCommentLoader(false)
     }
 }
 
@@ -297,17 +297,60 @@ const createNewTag = async (tagData, setLoading) => {
 
 // ── Health ────────────────────────────────────────────────────
 const checkHealthPing = async () => {
-    return await api.get("/health")
+    try {
+        const response = await api.get("/health")
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response.data
+    }
 }
 
 const checkHealthSendCookie = async () => {
-    return await api.post("/health/cors")
+    try {
+        const response = await api.post("/health/cors")
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response.data
+    }
 }
 
 const checkHealthCors = async () => {
-    return await api.get("/health/cors")
+    try {
+        const response = await api.get("/health/cors")
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response.data
+    }
 }
 
+
+const toggleAnswerStatus = async (toggleDetails, setLoading) => {
+    setLoading(true)
+
+    try {
+        const response = await api.post(
+            "/post/toggleStatus",
+            toggleDetails
+        )
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response.data
+    } finally {
+        setLoading(false)
+    }
+}
 // ── Export ─────────────────────────────────────────────────────
 const apiCall = {
     getFeed,
@@ -329,7 +372,8 @@ const apiCall = {
     submitVote,
     checkHealthPing,
     checkHealthSendCookie,
-    checkHealthCors
+    checkHealthCors,
+    toggleAnswerStatus
 }
 
 export default apiCall

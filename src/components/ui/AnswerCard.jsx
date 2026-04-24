@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom"
 /**
  * AnswerCard — individual answer with vote box, body, and comments.
  * Props:
- *   - answer: FeedAnswerResponseDTO { 
+ *   - answer: PostAnswerResponseDTO { 
     postId: 0,
     voted: false,
+    voteType: "",
     authorUsername: "",
     body: "",
     updatedAt: "",
@@ -21,14 +22,19 @@ import { useNavigate } from "react-router-dom"
  *   - onDeleteComment: (commentId) => void
  *   - isLoggedIn: boolean
  */
-function AnswerCard({ answer, onVote, onAddComment, onDeleteComment, isLoggedIn }) {
-
+function AnswerCard({ answer, onVote, onAddComment, onDeleteComment, onToggleStatus, isLoggedIn, commentLoader, operable, canToggle }) {
     const isAccepted = answer.postStatus === "ACCEPTED"
     const navigate = useNavigate()
 
+    const handleStatusToggle = () => {
+        console.log(answer.postId);
+
+        onToggleStatus(answer.postId)
+    }
+
     return (
         <div className={`flex gap-4 p-5 rounded-xl border transition-all duration-200 ${isAccepted
-            ? "bg-brand-50 border-l-4 border-l-brand-500 border-brand-200"
+            ? "border-l-4 border-l-brand-500 border-brand-200"
             : "bg-white border-gray-100 hover:border-brand-300 hover:shadow-sm"
             }`}>
             {/* Vote */}
@@ -36,30 +42,35 @@ function AnswerCard({ answer, onVote, onAddComment, onDeleteComment, isLoggedIn 
                 <VoteBox
                     score={answer.score}
                     hasVoted={answer.voted}
+                    voteType={answer.voteType}
                     onVote={onVote}
                     disabled={!isLoggedIn}
+                    operable={answer.operable}
                 />
-                <div className="flex flex-col items-center justify-center bg-gray-50 border border-gray-100
-                rounded-xl p-2 shrink-0
-                group-hover:bg-brand-50 group-hover:border-brand-100 transition-colors"
+                <button
+                    className={`group flex flex-col items-center justify-center rounded-xl p-2 shrink-0 transition-colors ${
+                        isAccepted ? "bg-brand-50 border-brand-100" : "bg-gray-50 border border-gray-100"
+                    } ${
+                        operable && (canToggle || isAccepted) ? "cursor-pointer" + (!isAccepted ? " hover:bg-brand-50 hover:border-brand-100" : "") : ""
+                    }`}
+                    disabled={!(operable && (canToggle || isAccepted))}
+                    onClick={() => handleStatusToggle()}
                 >
-                    <span className="text-black group-hover:text-brand-600 font-bold text-xl leading-none mb-1 transition-colors">
+                    <span className={`font-bold text-xl leading-none mb-1 transition-colors ${
+                        isAccepted ? "text-brand-600" : "text-black"
+                    } ${
+                        operable && (canToggle || isAccepted) && !isAccepted ? "group-hover:text-brand-600" : ""
+                    }`}>
                         {answer.postStatus.charAt(0)}
                     </span>
                     <span className="text-xs font-semibold text-gray-400 uppercase">
                         Status
                     </span>
-                </div>
+                </button>
             </div>
 
             {/* Content */}
             <div className="flex flex-col flex-1 gap-2 min-w-0">
-                {isAccepted && (
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-brand-600 mb-2">
-                        ✓ Accepted Answer
-                    </span>
-                )}
-
                 <p className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">
                     {answer.body}
                 </p>
@@ -89,6 +100,7 @@ function AnswerCard({ answer, onVote, onAddComment, onDeleteComment, isLoggedIn 
                     onAddComment={onAddComment}
                     onDeleteComment={onDeleteComment}
                     isLoggedIn={isLoggedIn}
+                    commentLoader={commentLoader}
                 />
             </div>
         </div>

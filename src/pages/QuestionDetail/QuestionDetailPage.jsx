@@ -6,16 +6,18 @@ import PageLoader from "../../components/ui/PageLoader"
 import QuestionCard from "./QuestionCard"
 import AnswersList from "./AnswersList"
 import NavBar from "../../components/NavBar"
+import helperFunctions from "../../services/helperFunctions"
 
 export default function QuestionDetailPage() {
-    const { postId } = useParams()
+    const { encryptedPostId } = useParams()
     const { userProfile } = useUserContext()
     const [question, setQuestion] = useState(null)
     const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false)
     const [answerBody, setAnswerBody] = useState("")
-    const [loading, setLoading] = useState()
+    const [loading, setLoading] = useState(false)
+    const [commentLoader, setCommentLoader] = useState(false)
 
-    const isLoggedIn = !!userProfile?.username
+    const postId = helperFunctions.decryptNavId(encryptedPostId)
 
     useEffect(() => {
         fetchQuestion()
@@ -33,22 +35,26 @@ export default function QuestionDetailPage() {
 
     // ── Comment handlers ──
     const handleAddComment = async (targetPostId, body) => {
-        await apiCall.postComment({ postId: targetPostId, body }, setLoading)
+        await apiCall.postComment({ postId: targetPostId, body }, setCommentLoader)
         await fetchQuestion()
     }
 
     const handleDeleteComment = async (commentId) => {
-        await apiCall.deleteComment(commentId, setLoading)
+        await apiCall.deleteComment(commentId, setCommentLoader)
         await fetchQuestion()
     }
 
-    // ── Answer handler ──
     const handleSubmitAnswer = async (e) => {
         e.preventDefault()
         if (!answerBody.trim()) return
         await apiCall.postAnswer(postId, answerBody, setLoading)
         setAnswerBody("")
         setIsAnswerModalOpen(false)
+        await fetchQuestion()
+    }
+
+    const handleToggleAnswerStatus = async (answerId) => {
+        await apiCall.toggleAnswerStatus({ questionId: question.postId, answerId: answerId }, setLoading)
         await fetchQuestion()
     }
 
@@ -74,6 +80,10 @@ export default function QuestionDetailPage() {
         )
     }
 
+    const isClosed = question.postStatus === "CLOSED"
+    const isLoggedIn = !!userProfile?.username
+    const canAnswer = isLoggedIn && !isClosed && !question.operable
+
     return (
         <div className="min-h-screen bg-gray-50">
             <NavBar />
@@ -86,10 +96,11 @@ export default function QuestionDetailPage() {
                     onAddComment={(body) => handleAddComment(question.postId, body)}
                     onDeleteComment={handleDeleteComment}
                     isLoggedIn={isLoggedIn}
+                    commentLoader={commentLoader}
                 />
 
                 {/* Answer This Question button */}
-                {isLoggedIn && (
+                {canAnswer && (
                     <div className="flex justify-center">
                         <button
                             onClick={() => setIsAnswerModalOpen(true)}
@@ -107,7 +118,11 @@ export default function QuestionDetailPage() {
                         onVote={handleVote}
                         onAddComment={handleAddComment}
                         onDeleteComment={handleDeleteComment}
+                        onToggleStatus={handleToggleAnswerStatus}
                         isLoggedIn={isLoggedIn}
+                        commentLoader={commentLoader}
+                        operable={question.operable}
+                        canToggle={question.operable && !isClosed}
                     />
                 )}
             </div>
