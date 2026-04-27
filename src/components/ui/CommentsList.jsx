@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"
 import CommentItem from "./CommentItem"
 
@@ -10,15 +10,27 @@ import CommentItem from "./CommentItem"
  *   - onDeleteComment: (commentId: number) => Promise<void>
  *   - isLoggedIn: boolean
  */
-function CommentsList({ comments = [], onAddComment, onDeleteComment, isLoggedIn = false, commentLoader }) {
+function CommentsList({ comments = [], onAddComment, onDeleteComment, onUpdateComment, isLoggedIn = false, commentLoader }) {
     const [isOpen, setIsOpen] = useState(false)
     const [newComment, setNewComment] = useState("")
+    const [editingCommentId, setEditingCommentId] = useState(null)
+    const inputRef = useRef(null)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!newComment.trim() || newComment.length < 10) return
 
-        await onAddComment?.(newComment)
+        if (editingCommentId) {
+            await onUpdateComment?.(editingCommentId, newComment)
+            setEditingCommentId(null)
+        } else {
+            await onAddComment?.(newComment)
+        }
+        setNewComment("")
+    }
+
+    const handleCancelEdit = () => {
+        setEditingCommentId(null)
         setNewComment("")
     }
 
@@ -42,6 +54,12 @@ function CommentsList({ comments = [], onAddComment, onDeleteComment, isLoggedIn
                             key={comment.commentId}
                             comment={comment}
                             onDelete={onDeleteComment}
+                            onEdit={(c) => {
+                                setEditingCommentId(c.commentId)
+                                setNewComment(c.body)
+                                setTimeout(() => inputRef.current?.focus(), 0)
+                            }}
+                            isLoggedIn={isLoggedIn}
                         />
                     ))}
 
@@ -49,19 +67,34 @@ function CommentsList({ comments = [], onAddComment, onDeleteComment, isLoggedIn
                     {isLoggedIn && (
                         <form onSubmit={handleSubmit} className="flex gap-2 pt-3 mt-2">
                             <input
+                                ref={inputRef}
                                 type="text"
                                 value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                                placeholder="Add a comment (10–100 chars)..."
+                                onChange={(e) => {
+                                    setNewComment(e.target.value)
+                                    if (e.target.value === "" && editingCommentId) {
+                                        handleCancelEdit()
+                                    }
+                                }}
+                                placeholder={editingCommentId ? "Edit your comment..." : "Add a comment (10–100 chars)..."}
                                 maxLength={100}
                                 className="input-field text-xs py-2! px-3! flex-1"
                             />
+                            {editingCommentId && (
+                                <button
+                                    type="button"
+                                    onClick={handleCancelEdit}
+                                    className="btn-secondary text-xs! px-3! py-2!"
+                                >
+                                    Cancel
+                                </button>
+                            )}
                             <button
                                 type="submit"
                                 disabled={!commentLoader && newComment.length < 10}
                                 className="btn-primary text-xs! px-3! py-2! disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {commentLoader ? "Loading" : "Post"}
+                                {commentLoader ? "Loading" : (editingCommentId ? "Update" : "Post")}
                             </button>
                         </form>
                     )}

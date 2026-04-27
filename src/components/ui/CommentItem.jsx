@@ -1,5 +1,6 @@
 import { FaEllipsisV } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
+import ActionMenu from "./ActionMenu"
 
 /**
  * CommentItem — single comment row.
@@ -14,7 +15,7 @@ import { useNavigate } from "react-router-dom"
  *  }
  *   - onDelete: (commentId) => void
  */
-function CommentItem({ comment, onDelete }) {
+function CommentItem({ key, comment, onDelete, onEdit, isLoggedIn }) {
     const navigate = useNavigate()
 
     return (
@@ -35,15 +36,12 @@ function CommentItem({ comment, onDelete }) {
                 <span className="text-xs text-gray-400 font-medium">
                     {comment.updatedAt}
                 </span>
-                <button
-                    type="button"
-                    onClick={() => console.log(comment)}
-                    className={`text-gray-500 ${comment.operable ? "hover:text-black" : ""} transition-colors group-hover:opacity-100 cursor-pointer`}
-                    aria-label="Delete comment"
-                    disabled={!comment.operable}
-                >
-                    <FaEllipsisV className="text-xs" />
-                </button>
+                <ActionMenu
+                    isLoggedIn={isLoggedIn}
+                    operable={comment.operable}
+                    onDelete={() => onDelete(comment.commentId)}
+                    onEdit={() => onEdit(comment)}
+                />
             </div>
         </div>
     )
