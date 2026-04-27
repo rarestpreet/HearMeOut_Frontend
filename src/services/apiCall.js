@@ -206,6 +206,76 @@ const postAnswer = async (postId, body, setLoading) => {
     }
 }
 
+const updateAnswer = async (postId, body, setLoading) => {
+    setLoading(true)
+
+    try {
+        const response = await api.put(
+            `/post/answer/${postId}`,
+            { body }
+        )
+
+        response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response.data
+    } finally {
+        setLoading(false)
+    }
+}
+
+const deleteAnswer = async (postId, setLoading) => {
+    setLoading(true)
+
+    try {
+        const response = await api.delete(
+            `/post/answer/${postId}`
+        )
+
+        response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response.data
+    } finally {
+        setLoading(false)
+    }
+}
+
+const updateQuestion = async (postId, questionDetails, setLoading) => {
+    setLoading(true)
+
+    try {
+        const response = await api.put(
+            `/post/question/${postId}`,
+            questionDetails
+        )
+
+        response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response.data
+    } finally {
+        setLoading(false)
+    }
+}
+
+const deleteQuestion = async (postId) => {
+    try {
+        const response = await api.delete(
+            `/post/question/${postId}`
+        )
+
+        response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response.data
+    }
+}
+
 // ── Comments ──────────────────────────────────────────────────
 const postComment = async (commentDetails, setCommentLoader) => {
     setCommentLoader(true)
@@ -214,6 +284,25 @@ const postComment = async (commentDetails, setCommentLoader) => {
         const response = await api.post(
             "/comment",
             commentDetails
+        )
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response.data
+    } finally {
+        setCommentLoader(false)
+    }
+}
+
+const updateComment = async (commentId, body, setCommentLoader) => {
+    setCommentLoader(true)
+
+    try {
+        const response = await api.put(
+            `/comment/${commentId}`,
+            { body }
         )
 
         return response?.data
@@ -373,7 +462,12 @@ const apiCall = {
     checkHealthPing,
     checkHealthSendCookie,
     checkHealthCors,
-    toggleAnswerStatus
+    toggleAnswerStatus,
+    updateAnswer,
+    deleteAnswer,
+    deleteQuestion,
+    updateQuestion,
+    updateComment
 }
 
 export default apiCall
