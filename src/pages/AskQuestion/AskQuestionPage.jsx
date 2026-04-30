@@ -49,10 +49,11 @@ export default function AskQuestionPage({ initialBody = "" }) {
     const [availableTags, setAvailableTags] = useState([])
     const [tagsFetched, setTagsFetched] = useState(false)
 
-    // Redirect if not logged in
+    // Redirect if not logged in or is ADMIN
     useEffect(() => {
         if (loading) return
         if (!userProfile?.username) navigate("/login")
+        if (userProfile?.roles?.includes("ADMIN")) navigate("/")
     }, [userProfile, navigate, loading])
 
     // Fetch tags once

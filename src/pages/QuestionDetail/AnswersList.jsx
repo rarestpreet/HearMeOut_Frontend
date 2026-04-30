@@ -9,7 +9,7 @@ import AnswerCard from "../../components/ui/AnswerCard"
  *   - onDeleteComment: (commentId) => void
  *   - isLoggedIn: boolean
  */
-function AnswersList({ answers = [], onVote, onAddComment, onDeleteComment, onUpdateComment, onToggleStatus, isLoggedIn, commentLoader, operable, setLoading, onOperationSuccess }) {
+function AnswersList({ answers = [], onVote, onAddComment, onDeleteComment, onUpdateComment, onToggleStatus, isLoggedIn, isAdmin, commentLoader, operable, setLoading, onOperationSuccess }) {
 
     return (
         <div>
@@ -28,6 +28,7 @@ function AnswersList({ answers = [], onVote, onAddComment, onDeleteComment, onUp
                         onUpdateComment={onUpdateComment}
                         onToggleStatus={() => onToggleStatus?.(answer.postId)}
                         isLoggedIn={isLoggedIn}
+                        isAdmin={isAdmin}
                         commentLoader={commentLoader}
                         operable={operable}
                         setLoading={setLoading}

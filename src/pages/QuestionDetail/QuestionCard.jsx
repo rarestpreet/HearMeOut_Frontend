@@ -29,7 +29,7 @@ import apiCall from "../../services/apiCall"
  *   - onDeleteComment: (commentId) => void
  *   - isLoggedIn: boolean
  */
-function QuestionCard({ question, onVote, onAddComment, onDeleteComment, onUpdateComment, isLoggedIn, commentLoader, onOperationSuccess }) {
+function QuestionCard({ question, onVote, onAddComment, onDeleteComment, onUpdateComment, isLoggedIn, isAdmin, commentLoader, onOperationSuccess }) {
     const navigate = useNavigate()
 
     const handleEdit = async () => {
@@ -50,8 +50,8 @@ function QuestionCard({ question, onVote, onAddComment, onDeleteComment, onUpdat
                 hasVoted={question.voted}
                 voteType={question.voteType}
                 onVote={onVote}
-                disabled={!isLoggedIn}
-                operable={question.operable}
+                disabled={!isLoggedIn || isAdmin}
+                operable={question.operable && !isAdmin}
             />
 
             {/* Content */}
@@ -102,14 +102,14 @@ function QuestionCard({ question, onVote, onAddComment, onDeleteComment, onUpdat
                     onAddComment={onAddComment}
                     onDeleteComment={onDeleteComment}
                     onUpdateComment={onUpdateComment}
-                    isLoggedIn={isLoggedIn}
+                    isLoggedIn={isLoggedIn && !isAdmin}
                     commentLoader={commentLoader}
                 />
             </div>
             <div className="absolute -top-3 -right-3 z-10">
                 <ActionMenu
-                    isLoggedIn={isLoggedIn}
-                    operable={question.operable}
+                    isLoggedIn={isLoggedIn && !isAdmin}
+                    operable={question.operable && !isAdmin}
                     onEdit={() => handleEdit()}
                     onDelete={() => handleDelete()}
                 />

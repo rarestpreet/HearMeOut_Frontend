@@ -24,8 +24,8 @@ export default function ActionMenu({ isLoggedIn, operable, onEdit, onDelete, onR
     }, []);
 
     const options = [
-        { label: "Edit", icon: FaEdit, onClick: onEdit || (() => console.log("Edit")), show: operable },
-        { label: "Delete", icon: FaTrash, onClick: onDelete || (() => console.log("Delete")), danger: true, show: operable },
+        { label: "Edit", icon: FaEdit, onClick: onEdit || (() => console.log("Edit")), show: isLoggedIn && operable },
+        { label: "Delete", icon: FaTrash, onClick: onDelete || (() => console.log("Delete")), danger: true, show: isLoggedIn && operable },
         { label: "Report", icon: FaFlag, onClick: onReport || (() => console.log("Report")), danger: true, show: isLoggedIn && !operable },
         { label: "Share", icon: FaShareAlt, onClick: onShare || (() => console.log("Share")), show: true },
     ];

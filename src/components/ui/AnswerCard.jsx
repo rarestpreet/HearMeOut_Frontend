@@ -26,7 +26,7 @@ import apiCall from "../../services/apiCall"
  *   - onDeleteComment: (commentId) => void
  *   - isLoggedIn: boolean
  */
-function AnswerCard({ answer, onVote, onAddComment, onDeleteComment, onUpdateComment, onToggleStatus, isLoggedIn, commentLoader, operable, setLoading, onOperationSuccess }) {
+function AnswerCard({ answer, onVote, onAddComment, onDeleteComment, onUpdateComment, onToggleStatus, isLoggedIn, isAdmin, commentLoader, operable, setLoading, onOperationSuccess }) {
     const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false)
     const navigate = useNavigate()
     const isAccepted = answer.postStatus === "ACCEPTED"
@@ -47,18 +47,18 @@ function AnswerCard({ answer, onVote, onAddComment, onDeleteComment, onUpdateCom
                     hasVoted={answer.voted}
                     voteType={answer.voteType}
                     onVote={onVote}
-                    disabled={!isLoggedIn}
-                    operable={answer.operable}
+                    disabled={!isLoggedIn || isAdmin}
+                    operable={answer.operable && !isAdmin}
                 />
                 <button
                     className={`group flex flex-col items-center justify-center rounded-xl p-2 shrink-0 transition-colors ${isAccepted ? "bg-brand-50 border-brand-100" : "bg-gray-50 border border-gray-100"
-                        } ${operable ? "cursor-pointer" + (!isAccepted ? " hover:bg-brand-50 hover:border-brand-100" : "") : ""
+                        } ${operable && !isAdmin ? "cursor-pointer" + (!isAccepted ? " hover:bg-brand-50 hover:border-brand-100" : "") : ""
                         }`}
-                    disabled={!operable}
+                    disabled={!operable || isAdmin}
                     onClick={() => handleStatusToggle()}
                 >
                     <span className={`font-bold text-xl leading-none mb-1 transition-colors ${isAccepted ? "text-brand-600" : "text-black"
-                        } ${operable && !isAccepted ? "group-hover:text-brand-600" : ""
+                        } ${operable && !isAdmin && !isAccepted ? "group-hover:text-brand-600" : ""
                         }`}>
                         {answer.postStatus.charAt(0)}
                     </span>
@@ -101,14 +101,14 @@ function AnswerCard({ answer, onVote, onAddComment, onDeleteComment, onUpdateCom
                     onAddComment={onAddComment}
                     onDeleteComment={onDeleteComment}
                     onUpdateComment={onUpdateComment}
-                    isLoggedIn={isLoggedIn}
+                    isLoggedIn={isLoggedIn && !isAdmin}
                     commentLoader={commentLoader}
                 />
             </div>
             <div className="absolute -top-3 -right-3 z-10">
                 <ActionMenu
-                    isLoggedIn={isLoggedIn}
-                    operable={answer.operable}
+                    isLoggedIn={isLoggedIn && !isAdmin}
+                    operable={answer.operable && !isAdmin}
                     onEdit={() => setIsAnswerModalOpen(true)}
                     onDelete={async () => {
                         await apiCall.deleteAnswer(answer.postId, setLoading)

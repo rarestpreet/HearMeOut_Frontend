@@ -79,8 +79,9 @@ export default function QuestionDetailPage() {
     }
 
     const isClosed = question.postStatus === "CLOSED"
+    const isAdmin = userProfile?.roles?.includes("ADMIN") || false
     const isLoggedIn = !!userProfile?.username
-    const canAnswer = isLoggedIn && !isClosed && !question.operable
+    const canAnswer = isLoggedIn && !isClosed && !question.operable && !isAdmin
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -95,6 +96,7 @@ export default function QuestionDetailPage() {
                     onDeleteComment={handleDeleteComment}
                     onUpdateComment={handleUpdateComment}
                     isLoggedIn={isLoggedIn}
+                    isAdmin={isAdmin}
                     commentLoader={commentLoader}
                     onOperationSuccess={async () => {
                         await fetchQuestion()
@@ -123,6 +125,7 @@ export default function QuestionDetailPage() {
                         onUpdateComment={handleUpdateComment}
                         onToggleStatus={handleToggleAnswerStatus}
                         isLoggedIn={isLoggedIn}
+                        isAdmin={isAdmin}
                         commentLoader={commentLoader}
                         operable={question.operable}
                         setLoading={setLoading}
