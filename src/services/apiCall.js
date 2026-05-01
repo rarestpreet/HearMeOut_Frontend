@@ -440,6 +440,105 @@ const toggleAnswerStatus = async (toggleDetails, setLoading) => {
         setLoading(false)
     }
 }
+// ── User Account Management ────────────────────────────────────
+const updateUserProfile = async (username, profileData, setLoading) => {
+    setLoading(true)
+
+    try {
+        const response = await api.put(`/profile/${username}`,
+            profileData
+        )
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response?.data
+    } finally {
+        setLoading(false)
+    }
+}
+
+const deleteUserAccount = async (setLoading) => {
+    setLoading(true)
+
+    try {
+        const response = await api.delete("/profile")
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+
+        return ex?.response?.data
+    } finally {
+        setLoading(false)
+    }
+}
+
+// ── Email Verification & Password Reset ─────────────────────
+const sendVerificationOtp = async (setLoading) => {
+    setLoading(true)
+    try {
+        const response = await api.post("/mail/email-verification-otp")
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+        return ex?.response?.data
+    } finally {
+        setLoading(false)
+    }
+}
+
+const verifyAccount = async (otp, setLoading) => {
+    setLoading(true)
+    try {
+        const response = await api.post("/auth/verify-account",
+            { otp }
+        )
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+        return ex?.response?.data
+    } finally {
+        setLoading(false)
+    }
+}
+
+const sendPasswordResetOtp = async (email, setLoading) => {
+    setLoading(true)
+    try {
+        const response = await api.post("/mail/reset-password-otp",
+            { email }
+
+        )
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+        return ex?.response?.data
+    } finally {
+        setLoading(false)
+    }
+}
+
+const resetPassword = async (payload, setLoading) => {
+    setLoading(true)
+    try {
+        const response = await api.post("/auth/password-reset",
+            payload
+        )
+
+        return response?.data
+    } catch (ex) {
+        logging.errorHandler(ex?.response?.data)
+        return ex?.response?.data
+    } finally {
+        setLoading(false)
+    }
+}
+
 // ── Export ─────────────────────────────────────────────────────
 const apiCall = {
     getFeed,
@@ -467,7 +566,13 @@ const apiCall = {
     deleteAnswer,
     deleteQuestion,
     updateQuestion,
-    updateComment
+    updateComment,
+    updateUserProfile,
+    deleteUserAccount,
+    sendVerificationOtp,
+    verifyAccount,
+    sendPasswordResetOtp,
+    resetPassword
 }
 
 export default apiCall

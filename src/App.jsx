@@ -8,6 +8,9 @@ import AskQuestionPage from "./pages/AskQuestion/AskQuestionPage"
 import QuestionDetailPage from "./pages/QuestionDetail/QuestionDetailPage"
 import AdminDashboard from "./pages/Admin/AdminDashboard"
 import HealthCheck from "./pages/HealthCheck"
+import EditProfilePage from "./pages/UserProfile/EditProfilePage"
+import VerifyEmailPage from "./pages/UserProfile/VerifyEmailPage"
+import ResetPasswordPage from "./pages/UserProfile/ResetPasswordPage"
 import { AdminOnly } from "./components/CustomeRoutes"
 import ProfileLayout from "./ProfileLayout"
 
@@ -18,6 +21,9 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="" element={<ProfileLayout />}>
           <Route path="/profile/:username" element={<UserProfilePage />} />
+          <Route path="/profile/edit" element={<EditProfilePage />} />
+          <Route path="/profile/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/profile/reset-password" element={<ResetPasswordPage />} />
           <Route path="" element={<AdminOnly />}>
             <Route path="/health" element={<HealthCheck />} />
             <Route path="/tag" element={<AdminDashboard />} />

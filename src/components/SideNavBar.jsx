@@ -9,7 +9,13 @@ function SideNavBar() {
     const { loading, userProfile, setUserProfile, setLoading } = useUserContext()
 
     const isAdmin = userProfile?.roles?.includes("ADMIN") || false
-    const isOperable = userProfile?.username && location.pathname.includes(userProfile?.username)
+    const isOperable = userProfile?.username &&
+        (
+            location.pathname.includes(userProfile?.username) ||
+            location.pathname === "/profile/edit" ||
+            location.pathname === "/profile/verify-email" ||
+            location.pathname === "/profile/reset-password"
+        )
 
     // ── Navigation items (role-based) ──
     let navItems = [
@@ -24,11 +30,11 @@ function SideNavBar() {
 
     // Operable links (Profile tools) - only shown when on own profile page
     if (!isAdmin && isOperable) {
-        navItems.push({ path: "#", label: "Edit Profile", icon: FaUserEdit })
+        navItems.push({ path: "/profile/edit", label: "Edit Profile", icon: FaUserEdit })
         if (!userProfile?.accountVerified) {
-            navItems.push({ path: "#", label: "Verify Email", icon: FaCheckCircle })
+            navItems.push({ path: "/profile/verify-email", label: "Verify Email", icon: FaCheckCircle })
         }
-        navItems.push({ path: "#", label: "Reset Password", icon: FaKey })
+        navItems.push({ path: "/profile/reset-password", label: "Reset Password", icon: FaKey })
     }
 
     // ── Bottom utility links (only for admin) ──
@@ -94,7 +100,7 @@ function SideNavBar() {
                                         ? "bg-primary-container text-on-primary-container font-semibold shadow-sm"
                                         : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low"
                                     }
-                                    ${item.label !== "My Profile" ? "cursor-not-allowed" : ""}
+                                    ${item.path === "#" ? "cursor-not-allowed" : ""}
                                 `}
 
                             >

@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { useUserContext } from "../../context/userContext"
-import { FaQuestionCircle, FaCommentDots, FaEdit, FaCheckCircle, FaKey, FaUserEdit } from "react-icons/fa"
-
+import { FaQuestionCircle, FaCommentDots, FaEdit } from "react-icons/fa"
+import { useUserProfileContext } from "../../context/userProfileContext"
 import apiCall from "../../services/apiCall"
 import ProfileHeader from "./ProfileHeader"
 import ProfileTabContent from "./ProfileTabContent"
@@ -27,21 +26,15 @@ import ProfileTabContent from "./ProfileTabContent"
 
 export default function UserProfilePage() {
     const { username } = useParams()
-    const { userProfile: loggedInUser } = useUserContext()
+    const { userProfile, loading } = useUserProfileContext()
     const [activeTab, setActiveTab] = useState("questions")
-    const [loading, setLoading] = useState()
     const [tabLoading, setTabLoading] = useState()
 
-    const [userProfile, setUserProfile] = useState({})
     const [userQuestions, setUserQuestions] = useState([])
     const [userAnswers, setUserAnswers] = useState([])
     const [userComments, setUserComments] = useState([])
 
     useEffect(() => {
-        const getProfile = async () => {
-            const userDetails = await apiCall.getUserProfile(username, setLoading, setUserProfile)
-        }
-        getProfile()
         fetchUserQuestions()
     }, [username])
 
@@ -51,7 +44,6 @@ export default function UserProfilePage() {
 
     const fetchUserAnswers = async () => {
         const data = await apiCall.getUserAnswer(username, setTabLoading, setUserAnswers)
-
     }
 
     const fetchUserComments = async () => {
