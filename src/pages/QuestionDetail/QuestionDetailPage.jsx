@@ -45,8 +45,6 @@ export default function QuestionDetailPage() {
     }
 
     const handleUpdateComment = async (commentId, body) => {
-        console.log(commentId, body);
-
         await apiCall.updateComment(commentId, body, setCommentLoader)
         await fetchQuestion()
     }

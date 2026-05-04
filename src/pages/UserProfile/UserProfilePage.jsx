@@ -5,20 +5,11 @@ import { useUserProfileContext } from "../../context/userProfileContext"
 import apiCall from "../../services/apiCall"
 import ProfileHeader from "./ProfileHeader"
 import ProfileTabContent from "./ProfileTabContent"
+import { useUserContext } from "../../context/userContext"
 
 /**
  * AnswerCard — individual answer with vote box, body, and comments.
- * Props:
- *   - userProfile: UserProfileResponseDTO {
-        userId: 0,
-        username: "",
-        email: "",
-        reputation: 0,
-        createdAt: "",
-        operable: false,
-        isAccountVerified: false,
-        isAccountTerminated: false
-    }
+ *   - userProfile: {}
  *   - userQuestions: []
  *   - userAnswers: []
  *   - userComments: []
@@ -26,7 +17,9 @@ import ProfileTabContent from "./ProfileTabContent"
 
 export default function UserProfilePage() {
     const { username } = useParams()
-    const { userProfile, loading } = useUserProfileContext()
+
+    const [loading, setLoading] = useState(false)
+    const [userProfile, setUserProfile] = useState({})
     const [activeTab, setActiveTab] = useState("questions")
     const [tabLoading, setTabLoading] = useState()
 
@@ -35,6 +28,10 @@ export default function UserProfilePage() {
     const [userComments, setUserComments] = useState([])
 
     useEffect(() => {
+        const fetchUserProfile = async () => {
+            await apiCall.getUserProfile(username, setLoading, setUserProfile)
+        }
+        fetchUserProfile()
         fetchUserQuestions()
     }, [username])
 
