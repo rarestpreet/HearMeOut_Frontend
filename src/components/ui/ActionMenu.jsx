@@ -1,18 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { FaEllipsisV, FaFlag, FaTrash, FaEdit, FaShareAlt } from 'react-icons/fa';
 
-/**
- * ActionMenu — reusable dropdown menu for post actions.
- * Props:
- *   - isLoggedIn: boolean
- *   - operable: boolean (is author)
- *   - onEdit, onDelete, onReport, onShare: function callbacks
- */
-export default function ActionMenu({ isLoggedIn, operable, onEdit, onDelete, onReport, onShare }) {
+export default function ActionMenu({ isLoggedIn, operable, canReport, onEdit, onDelete, onReport, onShare }) {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
 
-    // click outside to close
     useEffect(() => {
         function handleClickOutside(event) {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -24,10 +16,10 @@ export default function ActionMenu({ isLoggedIn, operable, onEdit, onDelete, onR
     }, []);
 
     const options = [
-        { label: "Edit", icon: FaEdit, onClick: onEdit || (() => console.log("Edit")), show: isLoggedIn && operable },
-        { label: "Delete", icon: FaTrash, onClick: onDelete || (() => console.log("Delete")), danger: true, show: isLoggedIn && operable },
-        { label: "Report", icon: FaFlag, onClick: onReport || (() => console.log("Report")), danger: true, show: isLoggedIn && !operable },
-        { label: "Share", icon: FaShareAlt, onClick: onShare || (() => console.log("Share")), show: true },
+        { label: "Edit", icon: FaEdit, onClick: onEdit || (() => {}), show: isLoggedIn && operable },
+        { label: "Delete", icon: FaTrash, onClick: onDelete || (() => {}), danger: true, show: isLoggedIn && operable },
+        { label: "Report", icon: FaFlag, onClick: onReport || (() => {}), danger: true, show: canReport },
+        { label: "Share", icon: FaShareAlt, onClick: onShare || (() => {}), show: true },
     ];
 
     const visibleOptions = options.filter(opt => opt.show !== false);

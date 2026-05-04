@@ -109,7 +109,8 @@ function QuestionCard({ question, onVote, onAddComment, onDeleteComment, onUpdat
             <div className="absolute -top-3 -right-3 z-10">
                 <ActionMenu
                     isLoggedIn={isLoggedIn && !isAdmin}
-                    operable={question.operable && !isAdmin}
+                    operable={question.operable && !isAdmin && question.postStatus !== "CLOSED"}
+                    canReport={!(question.operable && !isAdmin)}
                     onEdit={() => handleEdit()}
                     onDelete={() => handleDelete()}
                 />

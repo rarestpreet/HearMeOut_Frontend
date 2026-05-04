@@ -30,11 +30,11 @@ function SideNavBar() {
 
     // Operable links (Profile tools) - only shown when on own profile page
     if (!isAdmin && isOperable) {
-        navItems.push({ path: "/profile/edit", label: "Edit Profile", icon: FaUserEdit })
+        navItems.push({ path: `/profile/${userProfile?.username}/edit`, label: "Edit Profile", icon: FaUserEdit })
         if (!userProfile?.accountVerified) {
-            navItems.push({ path: "/profile/verify-email", label: "Verify Email", icon: FaCheckCircle })
+            navItems.push({ path: `/profile/${userProfile?.username}/verify-email`, label: "Verify Email", icon: FaCheckCircle })
         }
-        navItems.push({ path: "/profile/reset-password", label: "Reset Password", icon: FaKey })
+        navItems.push({ path: `/profile/${userProfile?.username}/reset-password`, label: "Reset Password", icon: FaKey })
     }
 
     // ── Bottom utility links (only for admin) ──

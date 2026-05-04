@@ -66,14 +66,22 @@ function LoginPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 error={errors.email}
                             />
-                            <AuthInput
-                                label="Password"
-                                type="password"
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                error={errors.password}
-                            />
+                            <div className="flex flex-col gap-1">
+                                <AuthInput
+                                    label="Password"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    error={errors.password}
+                                />
+                                <Link
+                                    className="self-end text-xs text-brand-600 hover:text-brand-700 hover:underline font-bold"
+                                    to="/profile/reset-password"
+                                >
+                                    Forgot password?
+                                </Link>
+                            </div>
 
                             <button
                                 type="submit"

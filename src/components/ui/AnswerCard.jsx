@@ -108,7 +108,8 @@ function AnswerCard({ answer, onVote, onAddComment, onDeleteComment, onUpdateCom
             <div className="absolute -top-3 -right-3 z-10">
                 <ActionMenu
                     isLoggedIn={isLoggedIn && !isAdmin}
-                    operable={answer.operable && !isAdmin}
+                    operable={answer.operable && !isAdmin && answer.postStatus !== "ACCEPTED"}
+                    canReport={!(answer.operable && !isAdmin)}
                     onEdit={() => setIsAnswerModalOpen(true)}
                     onDelete={async () => {
                         await apiCall.deleteAnswer(answer.postId, setLoading)

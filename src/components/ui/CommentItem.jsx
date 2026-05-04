@@ -39,6 +39,7 @@ function CommentItem({ key, comment, onDelete, onEdit, isLoggedIn }) {
                 <ActionMenu
                     isLoggedIn={isLoggedIn}
                     operable={comment.operable}
+                    canReport={!comment.operable}
                     onDelete={() => onDelete(comment.commentId)}
                     onEdit={() => onEdit(comment)}
                 />
